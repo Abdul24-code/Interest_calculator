@@ -47,10 +47,10 @@ jobs:
         pip install -r requirements.txt
         # python app.py
   
-    - name: Setup Flutter ${{ env.FLUTTER_VERSION }}
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: ${{ env.FLUTTER_VERSION }}
+    # - name: Setup Flutter ${{ env.FLUTTER_VERSION }}
+    #   uses: subosito/flutter-action@v2
+    #   with:
+    #     flutter-version: ${{ env.FLUTTER_VERSION }}
 
     - name: Flet Build Web
       run: |
