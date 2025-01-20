@@ -5,12 +5,13 @@ on:
     branches:
       - main  # Trigger deploy on push to the main branch
 
-
 jobs:
   run-tests:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -21,6 +22,12 @@ jobs:
         run: |
           pip install -r ./requirements.txt
 
+      - name: Run Flask app
+        run: |
+          # Start Flask app on 0.0.0.0:5000
+          FLASK_APP=app.py FLASK_RUN_HOST=0.0.0.0 FLASK_RUN_PORT=5000 flask run &  # Run in background
+          sleep 5  # Wait for app to start
+
       - name: Run Full Set of Tests
         run: |
-          python app.py
+          curl http://localhost:5000  # Test if the Flask app is up and running
