@@ -5,29 +5,22 @@ on:
     branches:
       - main  # Trigger deploy on push to the main branch
 
+
 jobs:
-  deploy:
+  run-tests:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
-      - name: Set up SSH key for server access
-        uses: webfactory/ssh-agent@v0.5.3
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          python-version: '3.x'
 
-      - name: Deploy Flask app to server
+      - name: Install Dependencies
         run: |
-          # Copy files to server
-          rsync -avz --exclude '.git' --exclude 'venv' ./ user@your-server-ip:/path/to/your/app/
+          pip install -r ./requirements.txt
 
-          # SSH into the server to install dependencies and restart app
-          ssh user@your-server-ip << 'EOF'
-            cd /path/to/your/app
-            python3 -m venv venv
-            source venv/bin/activate
-            pip install -r requirements.txt
-            sudo systemctl restart flask-app.service
-          EOF
+      - name: Run Full Set of Tests
+        run: |
+          python app.py
